@@ -1,7 +1,7 @@
 
 # Реализаци простого EDI
 
-***Name: EDInetWorth****<br>
+***Name: EDInetWorth***<br>
 ***Date: 02.05.2020***<br>
 ***Language: Python 3.6.5***<br>
 ***Version: 1.0***<br>
