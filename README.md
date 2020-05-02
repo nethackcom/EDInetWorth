@@ -5,7 +5,7 @@
 ***Date: 02.05.2020***<br>
 ***Language: Python 3.6.5***<br>
 ***Version: 1.0***<br>
-***Copyright Orlov Alexandr***<br>
+***Copyright by Orlov Alexandr***<br>
 
 
 
