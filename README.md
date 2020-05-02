@@ -1,6 +1,7 @@
 
-# EDInetWorth
+# Реализаци простого EDI
 
+***Name: EDInetWorth****
 ***Date: 02.05.2020***<br>
 ***Version: 1.0***<br>
 ***Copyright Orlov Alexandr***<br>
