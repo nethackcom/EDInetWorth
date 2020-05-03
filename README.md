@@ -1,11 +1,13 @@
 
 # Реализаци простого EDI
 
-***Name: EDInetWorth****<br>
+***Name: EDInetWorth***<br>
 ***Date: 02.05.2020***<br>
 ***Language: Python 3.6.5***<br>
 ***Version: 1.0***<br>
-***Copyright Orlov Alexandr***<br>
+***Copyright by Orlov Alexandr***<br>
+
+
 
 Подключение к веб-сервисам по протоколу SOAP на языке программирования python.
 -----------------------------------------------------------------------------------------------
