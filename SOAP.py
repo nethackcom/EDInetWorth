@@ -111,8 +111,8 @@ class SOAP(object):
 
 
 if __name__ == "__main__":
-    # Code is here...
-
     SOAPClient = SOAP()
+    # code is here...
+    
     SOAPClient.Relationships("2000000006", "password", 5000)
     SOAPClient.Send("2000000000006", "password", "2000000000009", "INVOICE", "ECODV0R2", "EDIFACT", "T", "0001", "UNB ... UNZ", 5000)
