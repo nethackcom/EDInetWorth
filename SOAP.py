@@ -2,6 +2,7 @@
 # Language: Python 3.6.5
 # Version: 1.0
 # Copyright by Orlov Alexandr
+# Documentation: https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf
 
 
 import os
@@ -9,8 +10,8 @@ from zeep import Client
 from zeep.transports import Transport
 from requests import Session
 
-class SOAP(object):
 
+class soap_logic(object):
     def __init__(self):
         self.wsdl = "https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL"
         self.session = Session()
@@ -20,65 +21,15 @@ class SOAP(object):
         # Это сделанно для того, чтобы создать некий канал связи между всеми обьектами в классе SOAP.
         # Переменную обновляет обьект refresh_big_data(), после вызова любого метода веб-сервиса
         self.big_data = \
-        {
-            "code_error": None,
-            "PartnerIln": None,
-            "DocumentType": None,
-            "DocumentVersion": None,
-            "DocumentStandard": None,
-            "DocumentTest": None,
-            "TrackingId": None
-        }
-
-    def Relationships(self, *data):
-        request_data = data
-        relationships = self.client.service.Relationships(*request_data)
-        self.refresh_big_data(relationships)
-        print(relationships)
-
-    def Send(self, *data):
-        request_data = data
-        Send = self.client.service.Send(*request_data)
-        self.refresh_big_data(Send)
-        print(Send)
-
-    def ListPB(self, *data):
-        request_data = data
-        ListPB = self.client.service.ListPB(*request_data)
-        self.refresh_big_data(ListPB)
-        print(ListPB)
-
-    def Receive(self, *data):
-        request_data = data
-        Receive = self.client.service.Receive(*request_data)
-        self.refresh_big_data(Receive)
-        print(Receive)
-
-    def ListMB(self, *data):
-        request_data = data
-        ListMB = self.client.service.ListMB(*request_data)
-        self.refresh_big_data(ListMB)
-        print(ListMB)
-
-    def ListMBex(self, *data):
-        request_data = data
-        ListMBex = self.client.service.ListMBex(*request_data)
-        self.refresh_big_data(ListMBex)
-        print(ListMBex)
-
-    def ChangeDocumentStatus(self, *data):
-        request_data = data
-        ChangeDocumentStatus = self.client.service.ChangeDocumentStatus(*request_data)
-        self.refresh_big_data(ChangeDocumentStatus)
-        print(ChangeDocumentStatus)
-
-    def ListPBEx(self, *data):
-        request_data = data
-        ListPBEx = self.client.service.ListPBEx(*request_data)
-        self.refresh_big_data(ListPBEx)
-        print(ListPBEx)
-
-
+            {
+                "code_error": None,
+                "PartnerIln": None,
+                "DocumentType": None,
+                "DocumentVersion": None,
+                "DocumentStandard": None,
+                "DocumentTest": None,
+                "TrackingId": None
+            }
 
     def refresh_big_data(self, updates):
         self.big_data = \
@@ -110,8 +61,82 @@ class SOAP(object):
         print(err(errors, error))
 
 
+class edi_service_soap_ecod_pl(soap_logic):
+    '''
+    Этот класс содержит реализацию каждого метода из EDISERVICE
+    Подробнее вы можете прочить в документации https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf
+    '''
+
+    # Подробнее вы можете почитать в документации (https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf)
+
+    # Relationships метод
+    # Данный метод возвращает взаимосвязи, определенные для конкретного пользователя в системе
+    # ECOD. Взаимосвязи определяют с кем и какого типа документами обменивается пользователь.
+    def Relationships(self, *data):
+        request_data = data
+        relationships = self.client.service.Relationships(*request_data)
+        self.refresh_big_data(relationships)
+        print(relationships)
+
+    # Send метод
+    # Данный метод используется для посылки документов.
+    def Send(self, *data):
+        request_data = data
+        Send = self.client.service.Send(*request_data)
+        self.refresh_big_data(Send)
+        print(Send)
+
+    # ListPB метод
+    # Метод, позволяющий просмотреть статусы документов, пересылаемых в данный момент.
+    def ListPB(self, *data):
+        request_data = data
+        ListPB = self.client.service.ListPB(*request_data)
+        self.refresh_big_data(ListPB)
+        print(ListPB)
+
+    # Receive метод
+    # Метод, обеспечивающий получение документов.
+    def Receive(self, *data):
+        request_data = data
+        Receive = self.client.service.Receive(*request_data)
+        self.refresh_big_data(Receive)
+        print(Receive)
+
+    # ListMB метод
+    # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
+    def ListMB(self, *data):
+        request_data = data
+        ListMB = self.client.service.ListMB(*request_data)
+        self.refresh_big_data(ListMB)
+        print(ListMB)
+
+    # ListMBex метод
+    # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
+    def ListMBex(self, *data):
+        request_data = data
+        ListMBex = self.client.service.ListMBex(*request_data)
+        self.refresh_big_data(ListMBex)
+        print(ListMBex)
+
+    # ChangeDocumentStatus метод
+    # Данный метод дает возможность изменить статус документа (N - new, R - read).
+    def ChangeDocumentStatus(self, *data):
+        request_data = data
+        ChangeDocumentStatus = self.client.service.ChangeDocumentStatus(*request_data)
+        self.refresh_big_data(ChangeDocumentStatus)
+        print(ChangeDocumentStatus)
+
+    # ListPBEx метод
+    # Метод возвращает значения статусов отосланных документов.
+    def ListPBEx(self, *data):
+        request_data = data
+        ListPBEx = self.client.service.ListPBEx(*request_data)
+        self.refresh_big_data(ListPBEx)
+        print(ListPBEx)
+
+
 if __name__ == "__main__":
-    SOAPClient = SOAP()
+    SOAPClient = edi_service_soap_ecod_pl()
     # code is here...
     
     SOAPClient.Relationships("2000000006", "password", 5000)
