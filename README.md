@@ -6,6 +6,7 @@
 ***Language: Python 3.6.5***<br>
 ***Version: 1.0***<br>
 ***Copyright by Orlov Alexandr***<br>
+***Проект реализован по документации https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf***<br>
 
 
 
