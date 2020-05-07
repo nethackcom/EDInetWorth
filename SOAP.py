@@ -9,30 +9,13 @@ import os
 from zeep import exceptions
 from zeep import Client
 from zeep.transports import Transport
+import requests.exceptions
 from requests import Session
 
 
-class soap_logic(object):
-    def __init__(self):
-        self.wsdl = "https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL"
-        self.session = Session()
-        self.client = Client(self.wsdl, transport=Transport(session=self.session))
-
-    def refresh_big_data(self, updates):
-        self.big_data = \
-            {
-                "code_error": updates["Res"],
-                "PartnerIln": None,  # updates["partner-iln"]
-                "DocumentType": None,  # updates["document-type"]
-                "DocumentVersion": None,  # updates["document-version"]
-                "DocumentStandard": None,  # updates["document-standard"]
-                "DocumentTest": None,  # updates["document-test"]
-                "TrackingId": None  # updates["tracking-id"]
-            }
-        self.trackback_errors()
-
-    # Метод обработки ошибок
-    def trackback_errors(self):
+# Класс по обработке и вывода сообщений
+class TrackbackMessage(object):
+    def trackback_errors(self, request_data):
         errors = {
             "00000000": "Операция успешно завершена.",
             "00000001": "Ошибка аутентификации.",
@@ -44,91 +27,114 @@ class soap_logic(object):
             "00000007": "Некорректные параметры."
         }
 
-        error = str(self.big_data["code_error"])
+        error = str(request_data["Res"])
         err = lambda errors, error: errors[error]
         print(err(errors, error))
 
 
-class edi_service_soap_ecod_pl(soap_logic):
+class edi_service_soap_ecod_pl(TrackbackMessage):
     '''
     Этот класс содержит реализацию каждого метода из EDISERVICE
     Подробнее вы можете прочить в документации https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf
+    Описание параметров:
+    <::Тип_переменной -> параметр -> Описание параметра>
+    ::str -> partner_iln -> ID партнера, которому будет посылаться документ
+    ::str -> document_type -> Тип документа
+    ::str -> document_version -> Версия спецификации
+    ::str -> document_standard -> Стандарт документа
+    ::str -> document_test -> Статус документа (T – тест, P – продукционный)
+    ::str -> control_number -> Контрольный номер документа
+    ::str -> document_content -> Содержание документа
+    ::str -> date_from -> Опциональный
+    ::str -> date_to -> Опциональный
+    ::str -> item_from -> Опциональный
+    ::str -> item_to -> Опциональный
+    ::str -> tracking_id -> Document identifier in ECOD system (in data base BTS)
+    ::str -> change_document_status -> Новый статус документа после завершения чтения документа (new(N) или read(R))
+    ::str -> status -> Новый статус документа
+    ::str -> order_by ->
+    ::int -> timeout -> Таймаут на выполнение вызова метода(мс)
     '''
 
-    # Подробнее о каждом методе вы можете почитать в документации
-    # (https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf)
+    def __init__(self):
+        self.wsdl = "https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL"
+        self.session = Session()
+        self.client = Client(self.wsdl, transport=Transport(session=self.session))
 
     # Relationships метод
     # Данный метод возвращает взаимосвязи, определенные для конкретного пользователя в системе
     # ECOD. Взаимосвязи определяют с кем и какого типа документами обменивается пользователь.
-    def Relationships(self, *data):
-        relationships = self.client.service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        self.refresh_big_data(relationships)
-        print(relationships)
+    def Relationships(self, timeout):
+        request_data = self.client.service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), timeout)
+        self.trackback_errors(request_data)
+        print(request_data)
+
 
     # Send метод
     # Данный метод используется для посылки документов.
-    def Send(self, *data):
-        Send = self.client.service.Send(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        self.refresh_big_data(Send)
-        print(Send)
+    def Send(self, partner_iln, document_type, document_version, document_standard, document_test, control_number, document_content, timeout):
+        request_data = self.client.service.Send(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), partner_iln, document_type, document_version, document_standard, document_test, control_number, document_content, timeout)
+        self.trackback_errors(request_data)
+        print(request_data)
 
     # ListPB метод
     # Метод, позволяющий просмотреть статусы документов, пересылаемых в данный момент.
-    def ListPB(self, *data):
-        ListPB = self.client.service.ListPB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        self.refresh_big_data(ListPB)
-        print(ListPB)
+    def ListPB(self, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, timeout):
+        request_data = self.client.service.ListPB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, timeout)
+        self.trackback_errors(request_data)
+        print(request_data)
 
     # Receive метод
     # Метод, обеспечивающий получение документов.
-    def Receive(self, *data):
-        Receive = self.client.service.Receive(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        self.refresh_big_data(Receive)
-        print(Receive)
+    def Receive(self, partner_iln, document_type, tracking_id, document_standard, change_document_status, timeout):
+        request_data = self.client.service.Receive(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), partner_iln, document_type, tracking_id, document_standard, change_document_status, timeout)
+        self.trackback_errors(request_data)
+        print(request_data)
 
     # ListMB метод
     # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
-    def ListMB(self, *data):
-        ListMB = self.client.service.ListMB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        print("Error")
-        self.refresh_big_data(ListMB)
-        print(ListMB)
+    def ListMB(self, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout):
+        request_data = self.client.service.ListMB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout)
+        self.trackback_errors(request_data)
+        print(request_data)
 
     # ListMBex метод
     # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
-    def ListMBex(self, *data):
-        ListMBex = self.client.service.ListMBex(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        self.refresh_big_data(ListMBex)
-        print(ListMBex)
+    def ListMBex(self, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, document_status, timeout):
+        request_data = self.client.service.ListMBex(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, document_status, timeout)
+        self.trackback_errors(request_data)
+        print(request_data)
 
     # ChangeDocumentStatus метод
     # Данный метод дает возможность изменить статус документа (N - new, R - read).
-    def ChangeDocumentStatus(self, *data):
-        ChangeDocumentStatus = self.client.service.ChangeDocumentStatus(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        self.refresh_big_data(ChangeDocumentStatus)
-        print(ChangeDocumentStatus)
+    def ChangeDocumentStatus(self, tracking_id, status):
+        request_data = self.client.service.ChangeDocumentStatus(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), tracking_id, status)
+        self.trackback_errors(request_data)
+        print(request_data)
 
     # ListPBEx метод
     # Метод возвращает значения статусов отосланных документов.
-    def ListPBEx(self, *data):
-        ListPBEx = self.client.service.ListPBEx(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), *data)
-        self.refresh_big_data(ListPBEx)
-        print(ListPBEx)
+    def ListPBEx(self, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout):
+        request_data = self.client.service.ListPBEx(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout)
+        self.trackback_errors(request_data)
+        print(request_data)
 
 
 if __name__ == "__main__":
-    SOAPClient = edi_service_soap_ecod_pl()
-    # code is here...
     try:
-        SOAPClient.Relationship(5000)
-    except exceptions.ValidationError as excValid:
-        print("Неверные введенные параметры метода: ", str(excValid))
+        SOAPClient = edi_service_soap_ecod_pl()
+        SOAPClient.Relationships(5000)
+        # code is here...
+
+    except exceptions.ValidationError:
+        raise
+    except requests.exceptions.ConnectionError:
+        raise
     except SyntaxError as se:
-        print("Введите правильность вызова метода: ", se)
-    except NameError as e:
-        print("Ошибка параметра: ", str(e))
-    except TypeError as type_method_error:
-        print(type_method_error)
-    except AttributeError as att_method_error:
-        print("Ошибка вызова метода: ", att_method_error)
+        raise
+    except NameError:
+        raise
+    except TypeError:
+        raise
+    except AttributeError:
+        raise
