@@ -130,6 +130,8 @@ if __name__ == "__main__":
         raise
     except requests.exceptions.ConnectionError:
         raise
+    except requests.exceptions.ConnectTimeout:
+        raise
     except SyntaxError as se:
         raise
     except NameError:
