@@ -99,11 +99,11 @@ if __name__ == "__main__":
                 raise
     else:
         print(SOAPClient.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000))
-        print(SOAPClient.Send(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R1", "XL", "T", "", "test", 5000))
-        print(SOAPClient.ListPB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "EDIFACT", "T", "2002-09-11", "2002-09-10", "", "", 10000))
-        print(SOAPClient.Receive(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "{D1BA990B-98A6-40AE-B7F0-29A240CB54F0}", "XML", "R", 10000))
-        print(SOAPClient.ListMB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "XML", "T", "A", 10000))
+        #print(SOAPClient.Send(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R1", "XL", "T", "", "test", 5000))
+        #print(SOAPClient.ListPB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "EDIFACT", "T", "2002-09-11", "2002-09-10", "", "", 10000))
+        #print(SOAPClient.Receive(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "{D1BA990B-98A6-40AE-B7F0-29A240CB54F0}", "XML", "R", 10000))
+        #print(SOAPClient.ListMB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "XML", "T", "A", 10000))
         # print(SOAPClient.ListMBex(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R1", "XML", "T", "2002-09-11", "2002-09-10", "", "", "N", 5000))
-        print(SOAPClient.ChangeDocumentStatus(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "{57100E2A-ABE3-4DF5B61D-1C673C86DACD}", "R"))
-        print(SOAPClient.ListPBEx(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "XML", "T", "2002-09-11", "2002-09-10", "", "", "", 5000))
+        #print(SOAPClient.ChangeDocumentStatus(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "{57100E2A-ABE3-4DF5B61D-1C673C86DACD}", "R"))
+        #print(SOAPClient.ListPBEx(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "XML", "T", "2002-09-11", "2002-09-10", "", "", "", 5000))
         # code is here...
