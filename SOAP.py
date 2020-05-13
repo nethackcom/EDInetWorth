@@ -9,7 +9,6 @@ import os
 from zeep import Client
 from zeep.transports import Transport
 from requests import Session
-from proccess_error import TrackbackErrors
 
 
 class edi_service_soap_ecod_pl(TrackbackErrors):
