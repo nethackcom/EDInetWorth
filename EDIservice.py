@@ -19,16 +19,6 @@ class my_data_base(edi_service_soap_ecod_pl):
             "test"  # Статус документа
         ]
 
-    def execute_query(self, query=''):
-        if query == '': return
-        print(query)
-
-        with self.engine.connect() as connection:
-            try:
-                connection.execute(query)
-            except Exception as e:
-                print(e)
-
     def create_tables_relationships(self):
         meta = MetaData()
         requests_relationships_in = Table(
