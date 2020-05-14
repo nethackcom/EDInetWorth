@@ -9,7 +9,7 @@ from zeep.transports import Transport
 from requests import Session
 
 
-class edi_service_soap_ecod_pl():
+class edi_service_soap_ecod_pl:
     '''
     Этот класс содержит реализацию каждого метода из EDISERVICE
     Подробнее вы можете прочить в документации https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf
