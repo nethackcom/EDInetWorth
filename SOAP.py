@@ -1,18 +1,15 @@
-# Created: 02.05.2020 9:12
 # Language: Python 3.6.5
-# Version: 1.0
+# Version: 1.6
 # Author: Orlov Alexandr
 # Documentation: https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf
 
 
-import os
 from zeep import Client
 from zeep.transports import Transport
 from requests import Session
-from proccess_error import TrackbackErrors
 
 
-class edi_service_soap_ecod_pl(TrackbackErrors):
+class edi_service_soap_ecod_pl():
     '''
     Этот класс содержит реализацию каждого метода из EDISERVICE
     Подробнее вы можете прочить в документации https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf
@@ -48,71 +45,39 @@ class edi_service_soap_ecod_pl(TrackbackErrors):
     # Данный метод возвращает взаимосвязи, определенные для конкретного пользователя в системе
     # ECOD. Взаимосвязи определяют с кем и какого типа документами обменивается пользователь.
     def Relationships(self, login, password, timeout):
-        request_data = self.client.service.Relationships(login, password, timeout)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data
+        return self.client.service.Relationships(login, password, timeout)
 
     # Send метод
     # Данный метод используется для посылки документов.
     def Send(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, control_number, document_content, timeout):
-        request_data = self.client.service.Send(login, password, partner_iln, document_type, document_version, document_standard, document_test, control_number, document_content, timeout)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data
+        return self.client.service.Send(login, password, partner_iln, document_type, document_version, document_standard, document_test, control_number, document_content, timeout)
 
     # ListPB метод
     # Метод, позволяющий просмотреть статусы документов, пересылаемых в данный момент.
     def ListPB(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, timeout):
-        request_data = self.client.service.ListPB(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, timeout)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data
+        return self.client.service.ListPB(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, timeout)
 
     # Receive метод
     # Метод, обеспечивающий получение документов.
     def Receive(self, login, password, partner_iln, document_type, tracking_id, document_standard, change_document_status, timeout):
-        request_data = self.client.service.Receive(login, password, partner_iln, document_type, tracking_id, document_standard, change_document_status, timeout)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data
+        return self.client.service.Receive(login, password, partner_iln, document_type, tracking_id, document_standard, change_document_status, timeout)
 
     # ListMB метод
     # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
     def ListMB(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout):
-        request_data = self.client.service.ListMB(login, password, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data
+        return self.client.service.ListMB(login, password, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout)
 
     # ListMBex метод
     # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
     def ListMBex(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, document_status, timeout):
-        request_data = self.client.service.ListMBex(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, document_status, timeout)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data.getkey
+        return self.client.service.ListMBex(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, document_status, timeout)
 
     # ChangeDocumentStatus метод
     # Данный метод дает возможность изменить статус документа (N - new, R - read).
     def ChangeDocumentStatus(self, login, password, tracking_id, status):
-        request_data = self.client.service.ChangeDocumentStatus(login, password, tracking_id, status)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data
+        return self.client.service.ChangeDocumentStatus(login, password, tracking_id, status)
 
     # ListPBEx метод
     # Метод возвращает значения статусов отосланных документов.
     def ListPBEx(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout):
-        request_data = self.client.service.ListPBEx(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout)
-        TrackbackErrors.check_errors(self, request_data['Res'])
-        return request_data
-
-
-if __name__ == "__main__":
-
-    SOAPClient = edi_service_soap_ecod_pl("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
-
-    print(SOAPClient.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000))
-    # print(SOAPClient.Send(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "234523234", "INVOICE", "ECODV0R1", "XML", "T", "0000", "test", 5000))
-    # print(SOAPClient.ListPB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "234523234", "INVOICE", "ECODV0R2", "EDIFACT", "T", "", "", "", "", 10000))
-    # print(SOAPClient.Receive(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "{D1BA990B-98A6-40AE-B7F0-29A240CB54F0}", "XML", "R", 10000))
-    # print(SOAPClient.ListMB(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "XML", "T", "A", 10000))
-    # print(SOAPClient.ListMBex(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R1", "XML", "T", "2002-09-11", "2002-09-10", "", "", "N", 5000))
-    # print(SOAPClient.ChangeDocumentStatus(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "{57100E2A-ABE3-4DF5B61D-1C673C86DACD}", "R"))
-    # print(SOAPClient.ListPBEx(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "2000000000009", "INVOICE", "ECODV0R2", "XML", "T", "2002-09-11", "2002-09-10", "", "", "", 5000))
-
-    # code is here...
+        return self.client.service.ListPBEx(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout)
