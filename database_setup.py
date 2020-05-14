@@ -35,26 +35,21 @@ class session_relationships(database):
         self.session.add(fop)
         self.session.commit()
 
-    def update_table_relationships(self):
+    def update_table_relationships(self, relation_id_update, partner_iln_update, partner_name_update, direction_update, document_type_update, document_version_update, document_standard_update, document_test_update, description_update, test_update):
         update_relationships = self.session.query(database).filter_by(direction="IN").one()
-        update_relationships.relation_id = 1
-        update_relationships.partner_iln = "content"
-        update_relationships.partner_name = "content"
-        update_relationships.direction = "content"
-        update_relationships.document_type = "content"
-        update_relationships.document_version = "content"
-        update_relationships.document_standard = "content"
-        update_relationships.document_test = "content"
-        update_relationships.description = "content"
-        update_relationships.test = "content"
+        update_relationships.relation_id = relation_id_update
+        update_relationships.partner_iln = partner_iln_update
+        update_relationships.partner_name = partner_name_update
+        update_relationships.direction = direction_update
+        update_relationships.document_type = document_type_update
+        update_relationships.document_version = document_version_update
+        update_relationships.document_standard = document_standard_update
+        update_relationships.document_test = document_test_update
+        update_relationships.description = description_update
+        update_relationships.test = test_update
         self.session.add(update_relationships)
         self.session.commit()
-
-    def main(self):
-        self.create_table_relationships()
-        self.update_table_relationships()
 
 
 if __name__ == "__main__":
     db = session_relationships("sqlite:///request_of_methods.db")
-    db.main()
