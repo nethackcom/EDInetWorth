@@ -7,6 +7,7 @@
 from zeep import Client
 from zeep.transports import Transport
 from requests import Session
+import os
 
 
 class edi_service_soap_ecod_pl:
@@ -81,3 +82,8 @@ class edi_service_soap_ecod_pl:
     # Метод возвращает значения статусов отосланных документов.
     def ListPBEx(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout):
         return self.client.service.ListPBEx(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout)
+
+
+if __name__ == "__main__":
+    ss = edi_service_soap_ecod_pl("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
+    print(ss.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 5000))
