@@ -90,5 +90,13 @@ class EdiServiceSoapEcodPl:
     # ListPBEx метод
     # Метод возвращает значения статусов отосланных документов.
     def ListPBEx(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout):
+<<<<<<< HEAD
         request_data = self.client.service.ListPBEx(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout)
         return ParseRequestDataXML(request_data)
+=======
+        return self.client.service.ListPBEx(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout)
+
+
+if __name__ == "__main__":
+    ss = edi_service_soap_ecod_pl("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
+>>>>>>> f0da99e394518531889d196e108cb8d16fe31a1e
