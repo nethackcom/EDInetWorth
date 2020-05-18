@@ -86,4 +86,3 @@ class edi_service_soap_ecod_pl:
 
 if __name__ == "__main__":
     ss = edi_service_soap_ecod_pl("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
-    print(ss.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 5000))
