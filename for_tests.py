@@ -1,6 +1,6 @@
 from SOAP import EdiServiceSoapEcodPl  # SOAP.py
 import os  # Импортируем эту библиотеку для получения секьюрити данных из переменных окружения
-from session_relationship import SessionDataBaseRelationship
+from function_database_relationship import SessionDataBaseRelationship
 
 
 if __name__ == "__main__":

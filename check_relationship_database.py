@@ -1,5 +1,5 @@
 from SOAP import EdiServiceSoapEcodPl
-from session_relationship import SessionDataBaseRelationship
+from function_database_relationship import SessionDataBaseRelationship
 from database_relationships import StructureDatabaseRelationship
 from sqlalchemy.sql import select
 import os
@@ -17,3 +17,4 @@ class CheckRelationshipDatabase(SessionDataBaseRelationship):
         xml = self.relation_object.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000)
         # Получаем relation-id по которому будем искать запись в базе данных.
         relation_id_check = xml[0]["relation-id"]
+        # ...
