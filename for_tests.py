@@ -1,6 +1,7 @@
 from database_relationships import session_relationships  # database_relationships.py
 from SOAP import edi_service_soap_ecod_pl  # SOAP.py
-import os
+import os # Импортируем эту библиотеку для получения секьюрити данных из переменных окружения
+
 
 if __name__ == "__main__":
 

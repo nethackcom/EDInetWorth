@@ -62,6 +62,3 @@ class session_relationships:
 
 if __name__ == "__main__":
     db = session_relationships("sqlite:///request_of_methods.db")
-    db.select_data_relationships(3451, "4562", "dfgds", "OUT", "XML", "INVDOV", "content", "gg", "tdfgdfsgest", "csdfgontent")
-    db.select_data_relationships(3451, "3614645", "jbert", "IN", "XML", "INVDOV", "bfgsr", "tesvcx", "sdfsdg", "gfs")
-    db.update_table_relationships(3621, "6565", "gfh", "IN", "sdv", "sfh", "wer", "wertwt", "nhg", "xcvb")
