@@ -3,7 +3,6 @@
 # Author: Orlov Alexandr
 # Documentation: https://www.esphere.ru/assets/download/WebService_Comarch%20EDI.pdf
 
-from parse_requst_data import ParseRequestDataXML
 from zeep import Client
 from zeep.transports import Transport
 from requests import Session
@@ -49,46 +48,46 @@ class EdiServiceSoapEcodPl:
     # ECOD. Взаимосвязи определяют с кем и какого типа документами обменивается пользователь.
     def Relationships(self, login, password, timeout):
         request_data = self.client.service.Relationships(login, password, timeout)
-        return ParseRequestDataXML(request_data)
+        return request_data
 
     # Send метод
     # Данный метод используется для посылки документов.
     def Send(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, control_number, document_content, timeout):
         request_data = self.client.service.Send(login, password, partner_iln, document_type, document_version, document_standard, document_test, control_number, document_content, timeout)
-        return ParseRequestDataXML(request_data)
+        return request_data
 
     # ListPB метод
     # Метод, позволяющий просмотреть статусы документов, пересылаемых в данный момент.
     def ListPB(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, timeout):
         request_data = self.client.service.ListPB(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, timeout)
-        return ParseRequestDataXML(request_data)
+        return request_data
 
     # Receive метод
     # Метод, обеспечивающий получение документов.
     def Receive(self, login, password, partner_iln, document_type, tracking_id, document_standard, change_document_status, timeout):
         request_data = self.client.service.Receive(login, password, partner_iln, document_type, tracking_id, document_standard, change_document_status, timeout)
-        return ParseRequestDataXML(request_data)
+        return request_data
 
     # ListMB метод
     # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
     def ListMB(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout):
         request_data = self.client.service.ListMB(login, password, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout)
-        return ParseRequestDataXML(request_data)
+        return request_data
 
     # ListMBex метод
     # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
     def ListMBex(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, document_status, timeout):
         request_data = self.client.service.ListMBex(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, document_status, timeout)
-        return ParseRequestDataXML(request_data)
+        return request_data
 
     # ChangeDocumentStatus метод
     # Данный метод дает возможность изменить статус документа (N - new, R - read).
     def ChangeDocumentStatus(self, login, password, tracking_id, status):
         request_data = self.client.service.ChangeDocumentStatus(login, password, tracking_id, status)
-        return ParseRequestDataXML(request_data)
+        return request_data
 
     # ListPBEx метод
     # Метод возвращает значения статусов отосланных документов.
     def ListPBEx(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout):
         request_data = self.client.service.ListPBEx(login, password, partner_iln, document_type, document_version, document_standard, document_test, date_from, date_to, item_from, item_to, order_by, timeout)
-        return ParseRequestDataXML(request_data)
+        return request_data

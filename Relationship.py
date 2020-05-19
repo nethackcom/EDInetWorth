@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class StructureDatabaseRelationship(Base):
+class Relationship(Base):
     __tablename__ = 'Relationships'
 
     relation_id = Column(Integer, primary_key=True)
