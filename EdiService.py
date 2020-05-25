@@ -34,7 +34,7 @@ class EdiService(EdiServiceSoapEcodPl):
                     document = {}
                     documents_data.append(document)
                     for elem in root[x]:
-                        document.update({str(elem.tag): str(elem.text)})
+                        document.update({str(elem.tag): elem.text})
                 return documents_data
         except ParseError:
             # Используем исключение в том случае, если значение возвращаемое в словаре с ключем 'Cnt' не нужно парсить.

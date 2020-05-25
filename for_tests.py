@@ -29,9 +29,9 @@ if __name__ == "__main__":
     # print(ediservice.ListPBEx(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), "4606068999995", "DESADV", "ECODRU20", "XML","T", "sdf", "sdf", 5000))
 
     edi_service = EdiService("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
-    relationship = edi_service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000)
+    relationships = edi_service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000)
     # print(relationship)
 
     edi_database = EdiDatabase("sqlite:///request_of_methods.db")
-    print(edi_database.update_relationships(relationship))
+    print(edi_database.update_relationships(relationships))
     print(edi_database.get_relationships())

@@ -1,6 +1,7 @@
 from Relationship import Relationship, Base
 from sqlalchemy import create_engine, update, delete
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
 
 
 class EdiDatabase(Relationship):
@@ -22,50 +23,62 @@ class EdiDatabase(Relationship):
         self.session = self.DBSession()
         self.table = Relationship.__table__
 
-    def update_relationships(self, relationship):
+    def update_relationships(self, relationships):
         with self.engine.connect() as connection:
-            a = connection.execute(self.table.select())  # заносим все данные из БД в массив
-            start_data_bd = [elem.relation_id for elem in a]  # получаем все relation_id из массива с данными БД
-            for i in range(len(relationship)):
-                if int(relationship[i]['relation-id']) not in start_data_bd:
-                    connection.execute(self.table.insert().values(
-                        relation_id=relationship[i]['relation-id'],
-                        partner_iln=relationship[i]['partner-iln'],
-                        partner_name=relationship[i]['partner-name'],
-                        direction=relationship[i]['direction'],
-                        document_type=relationship[i]['document-type'],
-                        document_version=relationship[i]['document-version'],
-                        document_standard=relationship[i]['document-standard'],
-                        document_test=relationship[i]['document-test'],
-                        description=relationship[i]['description'],
-                        test=relationship[i]['test'],
-                        form=relationship[i]['form'],
-                    ))
+            relation_relationships = self.get_relationships()  # заносим все данные из БД в массив
+            for relationship in relationships:
+                if len(relation_relationships) > 0:
+                    for row in relation_relationships:
+                        if int(relationship['relation-id']) == row[0]:
+                            gg = update(self.table).where(
+                                self.table.c.relation_id == relationship['relation-id']).values({
+                                "relation_id": relationship['relation-id'],
+                                "partner_iln": relationship['partner-iln'],
+                                "partner_name": relationship['partner-name'],
+                                "direction": relationship['direction'],
+                                "document_type": relationship['document-type'],
+                                "document_version": relationship['document-version'],
+                                "document_standard": relationship['document-standard'],
+                                "document_test": relationship['document-test'],
+                                "description": relationship['description'],
+                                "test": relationship['test'],
+                                "form": relationship['form']
+                            })
+                            connection.execute(gg)
+                        else:
+                            try:
+                                connection.execute(self.table.insert().values(
+                                    relation_id=int(relationship['relation-id']),
+                                    partner_iln=relationship['partner-iln'],
+                                    partner_name=relationship['partner-name'],
+                                    direction=relationship['direction'],
+                                    document_type=relationship['document-type'],
+                                    document_version=relationship['document-version'],
+                                    document_standard=relationship['document-standard'],
+                                    document_test=relationship['document-test'],
+                                    description=relationship['description'],
+                                    test=relationship['test'],
+                                    form=relationship['form']
+                                ))
+                            except IntegrityError:
+                                pass
                 else:
-                    gg = update(self.table).where(self.table.c.relation_id == relationship[i]['relation-id']).values({
-                        "relation_id": relationship[i]['relation-id'],
-                        "partner_iln": relationship[i]['partner-iln'],
-                        "partner_name": relationship[i]['partner-name'],
-                        "direction": relationship[i]['direction'],
-                        "document_type": relationship[i]['document-type'],
-                        "document_version": relationship[i]['document-version'],
-                        "document_standard": relationship[i]['document-standard'],
-                        "document_test": relationship[i]['document-test'],
-                        "description": relationship[i]['description'],
-                        "test": relationship[i]['test'],
-                        "form": relationship[i]['form']
-                    })
-                    connection.execute(gg)
-                # b = connect.execute(self.table.select())
-                # end_data_bd = [elem for elem in b]
-                # for b_elem in end_data_bd:
-                #     for a_elem in start_data_bd:
-                #         if a_elem not in b_elem:
-                #             ss = self.session.query(self.table).delete(self.table.c.relation_id==a_elem.relation_id)
-                #             self.session.add(ss)
-                #             self.session.commit()
+                    connection.execute(self.table.insert().values(
+                        relation_id=relationship['relation-id'],
+                        partner_iln=relationship['partner-iln'],
+                        partner_name=relationship['partner-name'],
+                        direction=relationship['direction'],
+                        document_type=relationship['document-type'],
+                        document_version=relationship['document-version'],
+                        document_standard=relationship['document-standard'],
+                        document_test=relationship['document-test'],
+                        description=relationship['description'],
+                        test=relationship['test'],
+                        form=relationship['form']
+                    ))
 
     def get_relationships(self):
-        with self.engine.connect() as connection:
-            result = connection.execute(self.table.select())
-            return result
+        connection = self.engine.connect()
+        result = connection.execute(self.table.select())
+        data_db_relationships = [elem for elem in result]
+        return data_db_relationships
