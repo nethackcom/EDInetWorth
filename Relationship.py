@@ -18,3 +18,16 @@ class Relationship(Base):
     description = Column(String)
     test = Column(String)
     form = Column(String)
+
+    def __init__ (self, relation_id, partner_iln, partner_name, direction, document_type, document_version, document_standard, document_test, description, test, form):
+        self.relation_id = relation_id
+        self.partner_iln = partner_iln
+        self.partner_name = partner_name
+        self.direction = direction
+        self.document_type = document_type
+        self.document_version = document_version
+        self.document_standard = document_standard
+        self.document_test = document_test
+        self.description = description
+        self.test = test
+        self.form = form
