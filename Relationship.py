@@ -7,7 +7,7 @@ Base = declarative_base()
 class Relationship(Base):
     __tablename__ = 'Relationships'
 
-    relation_id = Column(Integer, primary_key=True)
+    relation_id = Column(Integer, primary_key=True, autoincrement=True, nullable=False, unique=True)
     partner_iln = Column(String)
     partner_name = Column(String)
     direction = Column(String)
@@ -19,7 +19,7 @@ class Relationship(Base):
     test = Column(String)
     form = Column(String)
 
-    def __init__ (self, relation_id, partner_iln, partner_name, direction, document_type, document_version, document_standard, document_test, description, test, form):
+    def __init__(self, relation_id, partner_iln, partner_name, direction, document_type, document_version, document_standard, document_test, description, test, form):
         self.relation_id = relation_id
         self.partner_iln = partner_iln
         self.partner_name = partner_name

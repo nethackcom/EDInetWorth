@@ -23,14 +23,27 @@ class EdiDatabase(Relationship):
         self.table_name = Relationship.__table__
 
     def update_relationships(self, relationships):
-        """ Метод принимает
-            -> relationships расперсенные данные из вызова методов EDISERVICE
+        """ Метод update_relationships принимает массив с документами.
+            Данные каждого документа лежат в словаре.
+            Метод update_relationships удаляет все данные из таблицы БД и заносит
+            входящие аргументы в таблицу Relationships
         """
+        # Удаляем все из таблицы
         relation_relationships = self.get_relationships()
         for row in relation_relationships:
             delete_row = self.session.query(self.table).filter_by(relation_id=row[0]).one()
             self.session.delete(delete_row)
         self.session.commit()
+
+        # Цикл удаления дублирующих словарей по relation-id из массива relationships
+        index = 1
+        for relationship in relationships:
+            for x in range(index, len(relationships)):
+                if relationship['relation-id'] == relationships[x]['relation-id']:
+                    del relationships[x]
+            index += 1
+
+        # Добавляем данные документов из relationships в массив
         for relationship in relationships:
             add_row = self.table(
                 relationship['relation-id'],
@@ -49,5 +62,6 @@ class EdiDatabase(Relationship):
         self.session.commit()
 
     def get_relationships(self):
+        """     Метод возвращает данные из таблицы      """
         result = self.engine.execute(self.table_name.select())
         return result
