@@ -1,6 +1,7 @@
 from Relationship import Relationship, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
 
 
 class EdiDatabase(Relationship):
@@ -28,38 +29,38 @@ class EdiDatabase(Relationship):
             Метод update_relationships удаляет все данные из таблицы БД и заносит
             входящие аргументы в таблицу Relationships
         """
-        # Удаляем все из таблицы
-        relation_relationships = self.get_relationships()
-        for row in relation_relationships:
-            delete_row = self.session.query(self.table).filter_by(relation_id=row[0]).one()
-            self.session.delete(delete_row)
-        self.session.commit()
+        # Наш метод update_relationships работает по принципу удалить все из таблицы изанести новые данные.
+        # Сделаем обработку ошибок на случай, если возникнет ошибка при добавленни данных в таблицу Relationships.
+        # С добавлением обработчика ошибок наша таблица сохранит прежние данные, а не удалит их.
+        try:
+            # Удаляем все из таблицы
+            relation_relationships = self.get_relationships()
+            for row in relation_relationships:
+                delete_row = self.session.query(self.table).filter_by(relation_id=row[0]).one()
+                self.session.delete(delete_row)
 
-        # Цикл удаления дублирующих словарей по relation-id из массива relationships
-        index = 1
-        for relationship in relationships:
-            for x in range(index, len(relationships)):
-                if relationship['relation-id'] == relationships[x]['relation-id']:
-                    del relationships[x]
-            index += 1
-
-        # Добавляем данные документов из relationships в массив
-        for relationship in relationships:
-            add_row = self.table(
-                relationship['relation-id'],
-                relationship['partner-iln'],
-                relationship['partner-name'],
-                relationship['direction'],
-                relationship['document-type'],
-                relationship['document-version'],
-                relationship['document-standard'],
-                relationship['document-test'],
-                relationship['description'],
-                relationship['test'],
-                relationship['form'],
-            )
-            self.session.add(add_row)
-        self.session.commit()
+            # Добавляем данные документов из relationships в массив
+            for relationship in relationships:
+                add_row = self.table(
+                    relationship['relation-id'],
+                    relationship['partner-iln'],
+                    relationship['partner-name'],
+                    relationship['direction'],
+                    relationship['document-type'],
+                    relationship['document-version'],
+                    relationship['document-standard'],
+                    relationship['document-test'],
+                    relationship['description'],
+                    relationship['test'],
+                    relationship['form'],
+                )
+                self.session.add(add_row)
+            self.session.commit()
+        except IntegrityError:
+            self.session.rollback()
+            return IntegrityError
+        finally:
+            self.session.close()
 
     def get_relationships(self):
         """     Метод возвращает данные из таблицы      """
