@@ -13,11 +13,10 @@ class IntegretionTest(EdiDatabase, TestCase):
         try:
             result = False
             self.update_relationships(relationships)
-            for x in range(0, len(relationships)):
-                for relationship in relationships:
-                    exists = self.session.query(self.table).filter_by(relation_id = relationship['relation-id'])
-                    if exists:
-                        result = True
+            for relationship in relationships:
+                exists = self.session.query(self.table).filter_by(relation_id = relationship['relation-id'])
+                if exists:
+                    result = True
             return relationships, result
         except Exception as e:
             print(e)
