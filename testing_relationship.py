@@ -11,13 +11,13 @@ class IntegretionTest(EdiDatabase, TestCase):
     # Метод, который тестирует вызоваемый метод из родительского класса
     def test_update_relationships(self, relationships):
         try:
-            result = True
+            result = False
             self.update_relationships(relationships)
             for x in range(0, len(relationships)):
                 for relationship in relationships:
                     exists = self.session.query(self.table).filter_by(relation_id = relationship['relation-id'])
-                    if not exists:
-                        result = False
+                    if exists:
+                        result = True
             return relationships, result
         except Exception as e:
             print(e)
