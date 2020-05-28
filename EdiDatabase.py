@@ -58,11 +58,13 @@ class EdiDatabase(Relationship):
             self.session.commit()
         except IntegrityError:
             self.session.rollback()
-            return IntegrityError
+            raise
         finally:
             self.session.close()
 
     def get_relationships(self):
         """     Метод возвращает данные из таблицы      """
-        result = self.engine.execute(self.table_name.select())
+        with self.engine.connect() as connection:
+            result = self.engine.execute(self.table_name.select())
+            connection.close()
         return result
