@@ -16,9 +16,7 @@ class IntegretionTest(EdiDatabase, TestCase):
             for x in range(0, len(relationships)):
                 for relationship in relationships:
                     exists = self.session.query(self.table).filter_by(relation_id = relationship['relation-id'])
-                    if exists:
-                        pass
-                    else:
+                    if not exists:
                         result = False
             return relationships, result
         except Exception as e:
