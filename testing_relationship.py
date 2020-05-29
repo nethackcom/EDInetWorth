@@ -7,7 +7,6 @@ class IntegretionTest(EdiDatabase, TestCase):
     def __init__(self):
         super().__init__("sqlite:///request_of_methods.db")
 
-    # Метод, который тестирует вызоваемый метод из родительского класса
     def test_update_relationships(self, relationships):
         try:
             result = False
