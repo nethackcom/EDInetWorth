@@ -17,8 +17,8 @@ class IntegretionTest(EdiDatabase, TestCase):
                 if exists:
                     result = True
             return relationships, result
-        except Exception as e:
-            print(e)
+        except Exception:
+            return Exception
         finally:
             pass
 
