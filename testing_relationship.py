@@ -1,9 +1,8 @@
 import os  # Импортируем эту библиотеку для получения секьюрити данных из переменных окружения
 from EdiDatabase import EdiDatabase
 from EdiService import EdiService
-from unittest import TestCase
 
-class IntegretionTest(EdiDatabase, TestCase):
+class IntegretionTest(EdiDatabase):
     def __init__(self):
         super().__init__("sqlite:///request_of_methods.db")
 
