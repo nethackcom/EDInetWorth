@@ -1,29 +1,27 @@
-import os  # Импортируем эту библиотеку для получения секьюрити данных из переменных окружения
 from EdiDatabase import EdiDatabase
-from EdiService import EdiService
 
 class IntegretionTest(EdiDatabase):
     def __init__(self):
         super().__init__("sqlite:///request_of_methods.db")
 
     def test_update_relationships(self, relationships):
+        # Так как тестовые кейсы не должны зависить друг от друга,
+        # отлавливаем исключения и продолжаем тестить дальше
         try:
             result = False
             self.update_relationships(relationships)
             for relationship in relationships:
-                exists = self.session.query(self.table).filter_by(relation_id = relationship['relation-id'])
+                exists = self.session.query(self.table).filter_by(relation_id=relationship['relation-id'])
                 if exists:
                     result = True
-            return relationships, result
-        except Exception:
-            return Exception
+            return relationships, result  # Возвращаем входящие данные для теста и результат теста
+        except Exception as e:
+            return e, relationships
         finally:
             pass
 
 
 if __name__ == "__main__":
-    edi_service = EdiService("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
-    relationships = edi_service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000)
     edi_database = EdiDatabase("sqlite:///request_of_methods.db")
     IntegretionTest = IntegretionTest()
 

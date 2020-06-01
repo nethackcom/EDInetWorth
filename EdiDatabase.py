@@ -2,6 +2,8 @@ from Relationship import Relationship, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
+import os
+from EdiService import EdiService
 
 
 class EdiDatabase(Relationship):
@@ -68,3 +70,11 @@ class EdiDatabase(Relationship):
             result = self.engine.execute(self.table_name.select())
             connection.close()
         return result
+
+
+if __name__ == "__main__":
+    edi_service = EdiService("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
+    relationships = edi_service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000)
+    edi_database = EdiDatabase("sqlite:///request_of_methods.db")
+
+    print(edi_database.update_relationships([{"relation-id": 1, "partner-iln": "sdfgdsfg", "partner-name": "dfgh", "direction": "sdfgdsfg", "document-type": "sdfgdsfg", "document-version": "sdfgdsfg", "document-standard": "sdfgdsfg", "document-test": "sdfgdsfg", "description": "sdfgdsfg", "test": "sdfgdsfg", "form": "sdfgdsfg"}, {"relation-id": 1, "partner-iln": "", "partner-name": "gdfe", "direction": "sdfgdsfg", "document-type": "sdfgdsfg", "document-version": "sdfgdsfg", "document-standard": "sdfgdsfg", "document-test": "sdfgdsfg", "description": "sdfgdsfg", "test": "sdfgdsfg", "form": "sdfgdsfg"}]))
