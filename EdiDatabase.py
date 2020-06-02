@@ -2,8 +2,6 @@ from Relationship import Relationship, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
-import os
-from EdiService import EdiService
 
 
 class EdiDatabase(Relationship):
@@ -38,7 +36,7 @@ class EdiDatabase(Relationship):
             # Удаляем все из таблицы
             relation_relationships = self.get_relationships()
             for row in relation_relationships:
-                delete_row = self.session.query(self.table).filter_by(relation_id=row[0]).one()
+                delete_row = self.session.query(self.table).filter_by(relation_id=row['relation-id']).one()
                 self.session.delete(delete_row)
 
             # Добавляем данные документов из relationships в массив
@@ -58,6 +56,7 @@ class EdiDatabase(Relationship):
                 )
                 self.session.add(add_row)
             self.session.commit()
+            return relationships
         except IntegrityError:
             self.session.rollback()
             raise
@@ -68,13 +67,20 @@ class EdiDatabase(Relationship):
         """     Метод возвращает данные из таблицы      """
         with self.engine.connect() as connection:
             result = self.engine.execute(self.table_name.select())
+            table_data = []
+            for elem in result:
+                table_data.append({
+                    'relation-id': elem[0],
+                    'partner-iln': elem[1],
+                    'partner-name': elem[2],
+                    'direction': elem[3],
+                    'document-type': elem[4],
+                    'document-version': elem[5],
+                    'document-standard': elem[6],
+                    'document-test': elem[7],
+                    'description': elem[8],
+                    'test': elem[9],
+                    'form': elem[10],
+                })
             connection.close()
-        return result
-
-
-if __name__ == "__main__":
-    edi_service = EdiService("https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL")
-    relationships = edi_service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000)
-    edi_database = EdiDatabase("sqlite:///request_of_methods.db")
-
-    print(edi_database.update_relationships([{"relation-id": 1, "partner-iln": "sdfgdsfg", "partner-name": "dfgh", "direction": "sdfgdsfg", "document-type": "sdfgdsfg", "document-version": "sdfgdsfg", "document-standard": "sdfgdsfg", "document-test": "sdfgdsfg", "description": "sdfgdsfg", "test": "sdfgdsfg", "form": "sdfgdsfg"}, {"relation-id": 1, "partner-iln": "", "partner-name": "gdfe", "direction": "sdfgdsfg", "document-type": "sdfgdsfg", "document-version": "sdfgdsfg", "document-standard": "sdfgdsfg", "document-test": "sdfgdsfg", "description": "sdfgdsfg", "test": "sdfgdsfg", "form": "sdfgdsfg"}]))
+        return table_data
