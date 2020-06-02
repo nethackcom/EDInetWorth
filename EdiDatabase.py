@@ -10,7 +10,7 @@ class EdiDatabase(Relationship):
     Класс имеет два метода:
     *update_relationships(relationship)* - на входе массив с документами. Данные каждого документа лежат в словаре.
                             Метод удаляет все с базы данных и заносит новые данные.
-    *get_relationships* - возвращает все данные Relationship из БД
+    *get_relationships* - возвращает все данные Relationships из таблицы
     '''
 
     def __init__(self, url):
