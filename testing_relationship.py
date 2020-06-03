@@ -32,7 +32,8 @@ class TestRelationships(unittest.TestCase):
 
     # Проверяем заносит ли, в таблицу передаваемые данные
     def test_1(self):
-        relationships = self.edi_database.update_relationships([{"relation-id": 2, "partner-iln": "test", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}])
+        relationships = [{"relation-id": 2, "partner-iln": "test", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}]
+        self.edi_database.update_relationships(relationships)
         get_table_data = self.edi_database.get_relationships()
         self.assertEqual(relationships, get_table_data)
 
