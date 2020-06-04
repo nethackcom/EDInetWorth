@@ -1,8 +1,7 @@
 from Relationship import Relationship, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
-
+from sqlalchemy.exc import ArgumentError
 
 class EdiDatabase(Relationship):
 
@@ -23,7 +22,7 @@ class EdiDatabase(Relationship):
         self.table = Relationship
         self.table_name = Relationship.__table__
 
-    def update_relationships(self, relationships):
+    def set_relationships(self, relationships):
         """ Метод update_relationships принимает массив с документами.
             Данные каждого документа лежат в словаре.
             Метод update_relationships удаляет все данные из таблицы БД и заносит
@@ -33,6 +32,9 @@ class EdiDatabase(Relationship):
         # Сделаем обработку ошибок на случай, если возникнет ошибка при добавленни данных в таблицу Relationships.
         # С добавлением обработчика ошибок наша таблица сохранит прежние данные, а не удалит их.
         try:
+            # Проверка relation-id каждого документа.Если relation-id = None, то выпрыгнет Exception
+            self.__check_relation_id(relationships)
+
             # Удаляем все из таблицы
             relation_relationships = self.get_relationships()
             for row in relation_relationships:
@@ -56,8 +58,7 @@ class EdiDatabase(Relationship):
                 )
                 self.session.add(add_row)
             self.session.commit()
-            return relationships
-        except IntegrityError:
+        except Exception:
             self.session.rollback()
             raise
         finally:
@@ -83,4 +84,13 @@ class EdiDatabase(Relationship):
                     'form': elem[10],
                 })
             connection.close()
-        return table_data
+            # Так как реляционная база данных не гарантирует возвращение отсортированных данных, сортируем их.
+            table_data_sorted = sorted(table_data, key=lambda x: x['relation-id'])
+        return table_data_sorted
+
+    def __check_relation_id(self, relationships):
+        # Проверка relation-id каждого документа.Если relation-id = None, то выпрыгнет Exception
+        if relationships:
+            for relationship in relationships:
+                if relationship and relationship['relation-id'] is None:
+                    raise ArgumentError('Invalid relation-id -> {}'.format(relationship['relation-id']), relationship)

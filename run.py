@@ -7,5 +7,4 @@ if __name__ == "__main__":
     relationships = edi_service.Relationships(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"), 1000)
     edi_database = EdiDatabase("sqlite:///request_of_methods.db")
 
-    print(edi_database.update_relationships(relationships))
-    print(edi_database.get_relationships())
+    edi_database.set_relationships(relationships)
