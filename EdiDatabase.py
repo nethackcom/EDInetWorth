@@ -9,7 +9,7 @@ class EdiDatabase(Relationship):
     Класс имеет два метода:
     *update_relationships(relationship)* - на входе массив с документами. Данные каждого документа лежат в словаре.
                             Метод удаляет все с базы данных и заносит новые данные.
-    *get_relationships* - возвращает все данные Relationships из таблицы
+    *get_relationships* - возвращает все данные Relationship из БД
     '''
 
     def __init__(self, url):
@@ -84,7 +84,6 @@ class EdiDatabase(Relationship):
                     'form': elem[10],
                 })
             connection.close()
-<<<<<<< HEAD
             # Так как реляционная база данных не гарантирует возвращение отсортированных данных, сортируем их.
             table_data_sorted = sorted(table_data, key=lambda x: x['relation-id'])
         return table_data_sorted
@@ -95,6 +94,3 @@ class EdiDatabase(Relationship):
             for relationship in relationships:
                 if relationship and relationship['relation-id'] is None:
                     raise ArgumentError('Invalid relation-id -> {}'.format(relationship['relation-id']), relationship)
-=======
-        return table_data
->>>>>>> origin/master
