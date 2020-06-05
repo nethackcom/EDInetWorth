@@ -73,7 +73,7 @@ class TestRelationships(unittest.TestCase):
         call_method = self.edi_database.set_relationships(relationships)
         relationships_from_db = self.edi_database.get_relationships()
 
-    # Проверяем выдаст ли ошибку при одинаковом relation-id у 2-х документов
+    # Проверяем на выпадения исключения при одинаковом relation-id у 2-х документов
     def test_7(self):
         relationships_from_db_before_update = self.edi_database.get_relationships()
         try:
@@ -89,7 +89,7 @@ class TestRelationships(unittest.TestCase):
         relationships_from_db = self.edi_database.get_relationships()
         self.assertRaises(Exception, call_method)  # Проверяем на исключения
 
-    # Проверяем очистит ли базу данных при передачи пустого массива с документами
+    # Проверяем на очисту базы данных при передачи пустого массива с документами
     def test_9(self):
         relationships = []
         self.edi_database.set_relationships(relationships)
