@@ -30,14 +30,14 @@ class TestRelationships(unittest.TestCase):
     def setUpClass(cls):
         cls.edi_database = EdiDatabase("sqlite:///request_of_methods.db")
 
-    # Проверяем заносит ли, в таблицу передаваемые данные
+    # Проверяем на обновления нашей базы данных
     def test_1(self):
         relationships = [{"relation-id": 2, "partner-iln": "test", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}]
         self.edi_database.set_relationships(relationships)
         relationships_from_db = self.edi_database.get_relationships()
         self.assertEqual(relationships, relationships_from_db)
 
-    # Проверяем занесет ли, передаваемые данные с None аргументом, но relation-id = 4
+    # Проверяем на добавление передаваемых данных с None аргументами, но relation-id = 4
     def test_2(self):
         relationships = [{"relation-id": 4, "partner-iln": None, "partner-name": None, "direction": None, "document-type": None, "document-version": None, "document-standard": None, "document-test": None, "description": None, "test": None, "form": None}]
         self.edi_database.set_relationships(relationships)
