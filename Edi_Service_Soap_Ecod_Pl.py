@@ -36,9 +36,11 @@ class EdiServiceSoapEcodPl:
     ::int -> timeout -> Таймаут на выполнение вызова метода(мс)
     '''
 
-    def __init__(self, url):
+    __url = "https://www.ecod.pl/webserv2/EDIservice.asmx?WSDL"
+
+    def __init__(self):
         session = Session()
-        self.client = Client(url, transport=Transport(session=session))
+        self.client = Client(self.__url, transport=Transport(session=session))
 
     # При вызове какого либо метода, он возвращает массив с расспарсеными xml документами.
     # В массиве находятся словари. Каждый словарь отвечает за определенный документ и содержит индивидуальную информацию.
@@ -71,6 +73,7 @@ class EdiServiceSoapEcodPl:
     # ListMB метод
     # Метод возвращает статус документов, которые были доставлены пользователю ECOD.
     def ListMB(self, login, password, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout):
+        self.Relationships(login, password, timeout)
         request_data = self.client.service.ListMB(login, password, partner_iln, document_type, document_version, document_standard, document_test, document_status, timeout)
         return request_data
 

@@ -1,8 +1,12 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+
 
 Base = declarative_base()
 
+# URL базы данных
+__url = "sqlite:///request_of_methods.db"
 
 class Relationship(Base):
     __tablename__ = 'Relationships'
@@ -31,3 +35,10 @@ class Relationship(Base):
         self.description = description
         self.test = test
         self.form = form
+
+
+# Создаем нашу БД
+engine = create_engine(__url)
+
+# Создаем нашу таблицу
+Base.metadata.create_all(engine)

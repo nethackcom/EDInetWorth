@@ -28,7 +28,7 @@ class TestRelationships(unittest.TestCase):
     # Этот метод вызывается для каждого выполняемого тестового кейса
     @classmethod
     def setUpClass(cls):
-        cls.edi_database = EdiDatabase("sqlite:///request_of_methods.db")
+        cls.edi_database = EdiDatabase()
 
     # Проверяем на обновления нашей базы данных
     def test_1(self):
@@ -71,23 +71,14 @@ class TestRelationships(unittest.TestCase):
     def test_6(self):
         relationships = [{"relation-id": None, "partner-iln": "test", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}]
         call_method = self.edi_database.set_relationships(relationships)
-        relationships_from_db = self.edi_database.get_relationships()
 
-    # Проверяем на выпадения исключения при одинаковом relation-id у 2-х документов
-    def test_7(self):
-        relationships_from_db_before_update = self.edi_database.get_relationships()
-        try:
-            relationships = [{"relation-id": 1, "partner-iln": "test", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}, {"relation-id": 1, "partner-iln": "", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}]
-            self.edi_database.set_relationships(relationships)
-        except Exception:
-            relationships_from_db_after_update = self.edi_database.get_relationships()
-            self.assertEqual(relationships_from_db_before_update, relationships_from_db_after_update)
+    # Передаем 2 одинаковый документа
 
     def test_8(self):
         relationships = [{"relation-id": 1, "partner-iln": "test", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}, {"relation-id": 1, "partner-iln": "", "partner-name": "test", "direction": "test", "document-type": "test", "document-version": "test", "document-standard": "test", "document-test": "test", "description": "test", "test": "test", "form": "test"}]
         call_method = self.edi_database.set_relationships(relationships)
         relationships_from_db = self.edi_database.get_relationships()
-        self.assertRaises(Exception, call_method)  # Проверяем на исключения
+        self.assertEqual(relationships, relationships_from_db)
 
     # Проверяем на очисту базы данных при передачи пустого массива с документами
     def test_9(self):
