@@ -46,7 +46,7 @@ class EdiDatabase(table):
                 relationship['test'],
                 relationship['form'],
             )
-            self.session.merge(add_row)
+            self.session.add(add_row)
         self.session.commit()
         self.session.close()
 
