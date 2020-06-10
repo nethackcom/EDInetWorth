@@ -5,7 +5,7 @@ from EdiService import EdiService
 import os
 
 
-class ClassListMB(EdiService):
+class ListMB(EdiService):
     def __init__(self):
         super().__init__()
         Session = sessionmaker(bind=Relationship.engine)
