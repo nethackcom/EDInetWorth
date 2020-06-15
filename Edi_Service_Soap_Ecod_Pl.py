@@ -6,6 +6,8 @@
 from zeep import Client
 from zeep.transports import Transport
 from requests import Session
+from requests.auth import HTTPBasicAuth
+import os
 
 
 class EdiServiceSoapEcodPl:
@@ -40,6 +42,7 @@ class EdiServiceSoapEcodPl:
 
     def __init__(self):
         session = Session()
+        session.auth = HTTPBasicAuth(os.getenv("NAME_KEY"), os.getenv("PASSWORD_KEY"))
         self.client = Client(self.__url, transport=Transport(session=session))
 
     # При вызове какого либо метода, он возвращает массив с расспарсеными xml документами.
